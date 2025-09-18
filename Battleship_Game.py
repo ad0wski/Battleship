@@ -1,3 +1,5 @@
+import random
+
 plansza = [[" ", " ", " ", " ", " "],
            [" ", " ", " ", " ", " "],
            [" ", " ", " ", " ", " "],
@@ -19,3 +21,20 @@ def wypisaniePlanszy(plansza):
         print("\n")
 
 wypisaniePlanszy(plansza)
+
+orientacjaStatku = ["pionowy", "poziomy"]
+
+def rozmieszczenieStatkow(plansza, orientacjaStatku):
+     orientacja = orientacjaStatku[random.randint(0, 1)]
+     if orientacja == "pionowy":
+          wiersz = random.randint(0, 4)
+          kolumna = random.randint(0, 5 - 3) #(3, to jest dlugosc statku)
+          for i in range(3):
+               plansza[wiersz][kolumna + 1] = "S"
+     elif orientacja == "poziomy":
+          wiersz = random.randint(0, 5 - 3)
+          kolumna = random.randint(0, 4)
+          for i in range(3):
+               plansza[wiersz + i][kolumna] = "S"
+     
+
