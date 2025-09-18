@@ -26,15 +26,25 @@ orientacjaStatku = ["pionowy", "poziomy"]
 
 def rozmieszczenieStatkow(plansza, orientacjaStatku):
      orientacja = orientacjaStatku[random.randint(0, 1)]
-     if orientacja == "pionowy":
+     if orientacja == "poziomy":
           wiersz = random.randint(0, 4)
           kolumna = random.randint(0, 5 - 3) #(3, to jest dlugosc statku)
           for i in range(3):
-               plansza[wiersz][kolumna + 1] = "S"
-     elif orientacja == "poziomy":
+               plansza[ord(wiersz.upper()) - 65][kolumna - 1 + i] = "🚢"
+     elif orientacja == "pionowy":
           wiersz = random.randint(0, 5 - 3)
           kolumna = random.randint(0, 4)
           for i in range(3):
-               plansza[wiersz + i][kolumna] = "S"
+               plansza[ord(wiersz.upper()) - 65 + i][kolumna - 1] = "🚢"
      
+
+wiersz = input("Podaj wiersz: ")
+kolumna = int(input("Podaj kolumne: "))
+
+def czyTrafione(plansza, wiersz, kolumna):
+     if plansza[ord(wiersz.upper()) - 65][kolumna - 1] == "🚢":
+          plansza[ord(wiersz.upper()) - 65][kolumna - 1] = "💥"
+          return True
+     plansza[ord(wiersz.upper()) - 65][kolumna - 1] = "❌"
+     return False
 
