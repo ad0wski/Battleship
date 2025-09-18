@@ -1,15 +1,15 @@
 import random
 
-plansza = [[" ", " ", " ", " ", " "],
-           [" ", " ", " ", " ", " "],
-           [" ", " ", " ", " ", " "],
-           [" ", " ", " ", " ", " "],
-           [" ", " ", " ", " ", " "]]
+plansza = [["  ", "  ", "  ", "  ", "  "],
+           ["  ", "  ", "  ", "  ", "  "],
+           ["  ", "  ", "  ", "  ", "  "],
+           ["  ", "  ", "  ", "  ", "  "],
+           ["  ", "  ", "  ", "  ", "  "]]
 
 def wypisaniePlanszy(plansza):
         print("\n")
-        print("    1   2   3   4   5 ")
-        print("   ─── ─── ─── ─── ─── ")
+        print("     1    2    3    4    5 ")
+        print("   ──── ──── ──── ──── ──── ")
         for i in range(5):
             for j in range(5):
                 if j == 0:
@@ -17,7 +17,7 @@ def wypisaniePlanszy(plansza):
                 else:
                      print(f" {plansza[i][j]}", end=" |")
             print()
-            print("   ─── ─── ─── ─── ─── ")
+            print("   ──── ──── ──── ──── ──── ")
         print("\n")
 
 wypisaniePlanszy(plansza)
@@ -30,16 +30,14 @@ def rozmieszczenieStatkow(plansza, orientacjaStatku):
           wiersz = random.randint(0, 4)
           kolumna = random.randint(0, 5 - 3) #(3, to jest dlugosc statku)
           for i in range(3):
-               plansza[ord(wiersz.upper()) - 65][kolumna - 1 + i] = "🚢"
+               plansza[wiersz][kolumna - 1 + i] = "🚢"
      elif orientacja == "pionowy":
           wiersz = random.randint(0, 5 - 3)
           kolumna = random.randint(0, 4)
           for i in range(3):
-               plansza[ord(wiersz.upper()) - 65 + i][kolumna - 1] = "🚢"
-     
+               plansza[wiersz + i][kolumna - 1] = "🚢"
 
-wiersz = input("Podaj wiersz: ")
-kolumna = int(input("Podaj kolumne: "))
+rozmieszczenieStatkow(plansza, orientacjaStatku)
 
 def czyTrafione(plansza, wiersz, kolumna):
      if plansza[ord(wiersz.upper()) - 65][kolumna - 1] == "🚢":
@@ -48,3 +46,16 @@ def czyTrafione(plansza, wiersz, kolumna):
      plansza[ord(wiersz.upper()) - 65][kolumna - 1] = "❌"
      return False
 
+trafienia = 0
+while trafienia < 3:
+     wiersz = input("Podaj wiersz: ")
+     kolumna = int(input("Podaj kolumne: "))
+     if czyTrafione(plansza, wiersz, kolumna) == True:
+          print("Trafiony! ")
+          trafienia += 1
+     else:
+          print("Pudło! ")
+     wypisaniePlanszy(plansza)
+
+
+print("Wygrałeś! Zatopiłeś wszystkie statki! ")
