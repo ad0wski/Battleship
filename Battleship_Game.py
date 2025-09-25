@@ -1,5 +1,33 @@
 import random
 
+zasady = """
+############################################
+#               GRA W STATKI               #
+############################################
+
+Cel gry:
+Twoim zadaniem jest zlokalizowanie i zatopienie wszystkich statków
+przeciwnika na planszy 5x5. Każdy statek zajmuje określoną ilość pól
+i może być ustawiony poziomo lub pionowo.
+
+Rozgrywka:
+1. Na początku gry, komputer losowo rozmieszcza swoje statki.
+2. Podajesz współrzędne strzału w formacie: wiersz, kolumna.
+3. Możliwe wyniki strzału:
+   💥 Trafienie w statek przeciwnika
+   ❌ Pudło (nie trafiłeś w żaden statek)
+   ⚓ Zatopienie statku (trafiono ostatnie pole danego statku)
+4. Gra kończy się, gdy wszystkie statki zostaną zatopione.
+
+Instrukcje dodatkowe:
+- Współrzędne wiersza podawaj literą A-E.
+- Współrzędne kolumny podawaj liczbą 1-5.
+- Staraj się przewidywać ruchy przeciwnika i planować swoje strzały strategicznie!
+
+Powodzenia! 🎯"""
+
+print(zasady)
+
 plansza = [["  ", "  ", "  ", "  ", "  "],
            ["  ", "  ", "  ", "  ", "  "],
            ["  ", "  ", "  ", "  ", "  "],
@@ -84,32 +112,38 @@ def czyZatopione(statek, pustaPlansza):
                return False
      return True
 
-
 trafienia = 0
+strzaly = 0
 zatopionyPotrojny = False
 zatopionyPodwojny = False
 zatopionyPojedynczy = False
 while trafienia < 6:
-     wiersz = input("Podaj wiersz: ")
-     kolumna = int(input("Podaj kolumne: "))
+     while True:
+          wiersz = input("Podaj wiersz: ")
+          kolumna = int(input("Podaj kolumne: "))
+          if wiersz.upper() not in ["A", "B", "C", "D", "E"] or kolumna not in [1, 2, 3, 4, 5]:
+               print("Nieprawidłowe współrzędne. Spróbuj ponownie.")
+          else:
+               break
      wynik = czyTrafione(plansza, wiersz, kolumna)
      if wynik == None:
-          print("Już strzeliłeś w to miejsce! ")
+          print("🔄 To pole już zostało sprawdzone. Wybierz inne! ")
      elif wynik == True:
-          print("Trafiony! ")
+          print("💥 Trafiony! ")
           trafienia += 1
+          strzaly += 1
           if zatopionyPotrojny == False and czyZatopione(potrojnyStatek, pustaPlansza) == True:
-               print("Zatopiłeś potrójny statek! ")
+               print("⚓ Zatopiłeś potrójny statek! ")
                zatopionyPotrojny = True
           elif zatopionyPodwojny == False and czyZatopione(podwojnyStatek, pustaPlansza) == True:
-               print("Zatopiłeś podwójny statek! ")
+               print("⚓ Zatopiłeś podwójny statek! ")
                zatopionyPodwojny = True
           elif zatopionyPojedynczy == False and czyZatopione(pojedynczyStatek, pustaPlansza) == True:
-               print("Zatopiłeś pojedynczy statek! ")
+               print("⚓ Zatopiłeś pojedynczy statek! ")
                zatopionyPojedynczy = True
      elif wynik == False:
-          print("Pudło! ")
+          print("❌ Pudło! ")
+          strzaly += 1
      wypisaniePlanszy(pustaPlansza)
 
-
-print("Wygrałeś! Zatopiłeś wszystkie statki! ")
+print(f"🏆 Gratulacje! Wygrałeś grę - wszystkie statki przeciwnika zostały zatopione w {strzaly} strzałach! ")
