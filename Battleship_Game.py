@@ -30,47 +30,47 @@ wypisaniePlanszy(plansza)
 
 orientacjaStatku = ["pionowy", "poziomy"]
 
-def rozmieszczenieDanegoStatku(plansza, dlugosc, orientacjaStatku):
-     while True:
-          orientacja = orientacjaStatku[random.randint(0, 1)]
-          if orientacja == "poziomy":
-               wiersz = random.randint(0, 4)
-               kolumna = random.randint(0, 5 - dlugosc)
-               for i in range(dlugosc):
-                    for j in range(dlugosc):
-                         if plansza[wiersz][kolumna + j] != " ":
-                              break
+statki = []
+
+def rozmieszczenieDanegoStatku(plansza, dlugosc, orientacjaStatku, statki):
+    statek = []
+    while True:
+        orientacja = orientacjaStatku[random.randint(0, 1)]
+        if orientacja == "poziomy":
+            wiersz = random.randint(0, 4)
+            kolumna = random.randint(0, 5 - dlugosc)
+            wolne = True
+            for i in range(dlugosc):
+                if plansza[wiersz][kolumna + i] != "  ":
+                    wolne = False
+                    break
+            if wolne:
+                for i in range(dlugosc):
                     plansza[wiersz][kolumna + i] = "🚢"
-          if orientacja == "pionowy":
-               wiersz = random.randint(0, 5 - dlugosc)
-               kolumna = random.randint(0, 4)
-               for i in range(dlugosc):
-                    for j in range(dlugosc):
-                         if plansza[wiersz][kolumna + j] != " ":
-                              break
+                    statek.append((wiersz, kolumna + i))
+                break
+        if orientacja == "pionowy":
+            wiersz = random.randint(0, 5 - dlugosc)
+            kolumna = random.randint(0, 4)
+            wolne = True
+            for i in range(dlugosc):
+                if plansza[wiersz + i][kolumna] != "  ":
+                    wolne = False
+                    break
+            if wolne:
+                for i in range(dlugosc):
                     plansza[wiersz + i][kolumna] = "🚢"
-               break
+                    statek.append((wiersz + i, kolumna))
+                break
+    statki.append(statek)
+    return statek
 
-# def rozmieszczenieStatkow(plansza, orientacjaStatku):
-#      orientacja = orientacjaStatku[random.randint(0, 1)]
-#      if orientacja == "poziomy":
-#           wiersz = random.randint(0, 4)
-#           kolumna = random.randint(0, 5 - 3) #(3, to jest dlugosc statku)
-#           for i in range(3):
-#                plansza[wiersz][kolumna + i] = "🚢"
-#      elif orientacja == "pionowy":
-#           wiersz = random.randint(0, 5 - 3)
-#           kolumna = random.randint(0, 4)
-#           for i in range(3):
-#                plansza[wiersz + i][kolumna] = "🚢"
-
-rozmieszczenieDanegoStatku(plansza, 3, orientacjaStatku)
-rozmieszczenieDanegoStatku(plansza, 2, orientacjaStatku)
-rozmieszczenieDanegoStatku(plansza, 1, orientacjaStatku)
+potrojnyStatek = rozmieszczenieDanegoStatku(plansza, 3, orientacjaStatku, statki)
+podwojnyStatek = rozmieszczenieDanegoStatku(plansza, 2, orientacjaStatku, statki)
+pojedynczyStatek = rozmieszczenieDanegoStatku(plansza, 1, orientacjaStatku, statki)
 
 def czyTrafione(plansza, wiersz, kolumna):
      if pustaPlansza[ord(wiersz.upper()) - 65][kolumna - 1] == "💥" or pustaPlansza[ord(wiersz.upper()) - 65][kolumna - 1] == "❌":
-          print("Już strzeliłeś w to miejsce! ")
           return None
      if plansza[ord(wiersz.upper()) - 65][kolumna - 1] == "🚢":
           pustaPlansza[ord(wiersz.upper()) - 65][kolumna - 1] = "💥"
@@ -78,14 +78,36 @@ def czyTrafione(plansza, wiersz, kolumna):
      pustaPlansza[ord(wiersz.upper()) - 65][kolumna - 1] = "❌"
      return False
 
+def czyZatopione(statek, pustaPlansza):
+     for wspolrzedne in statek:
+          if pustaPlansza[wspolrzedne[0]][wspolrzedne[1]] != "💥":
+               return False
+     return True
+
+
 trafienia = 0
+zatopionyPotrojny = False
+zatopionyPodwojny = False
+zatopionyPojedynczy = False
 while trafienia < 6:
      wiersz = input("Podaj wiersz: ")
      kolumna = int(input("Podaj kolumne: "))
-     if czyTrafione(plansza, wiersz, kolumna) == True:
+     wynik = czyTrafione(plansza, wiersz, kolumna)
+     if wynik == None:
+          print("Już strzeliłeś w to miejsce! ")
+     elif wynik == True:
           print("Trafiony! ")
           trafienia += 1
-     elif czyTrafione(plansza, wiersz, kolumna) == False:
+          if zatopionyPotrojny == False and czyZatopione(potrojnyStatek, pustaPlansza) == True:
+               print("Zatopiłeś potrójny statek! ")
+               zatopionyPotrojny = True
+          elif zatopionyPodwojny == False and czyZatopione(podwojnyStatek, pustaPlansza) == True:
+               print("Zatopiłeś podwójny statek! ")
+               zatopionyPodwojny = True
+          elif zatopionyPojedynczy == False and czyZatopione(pojedynczyStatek, pustaPlansza) == True:
+               print("Zatopiłeś pojedynczy statek! ")
+               zatopionyPojedynczy = True
+     elif wynik == False:
           print("Pudło! ")
      wypisaniePlanszy(pustaPlansza)
 
